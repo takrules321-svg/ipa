@@ -1,0 +1,1278 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Siddhivinayak Society Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    
+    :root {
+      --primary: #d97706;
+      --primary-hover: #b45309;
+      --bg-warm: #fefce8;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+
+    /* Custom Glassmorphism & UI Accents */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    .hero-gradient {
+      background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 50%, #fef3c7 100%);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    .tab-btn.active {
+      color: #d97706;
+      border-bottom-color: #d97706;
+      background-color: #fff7ed;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-amber-100 selection:text-amber-900">
+
+  <!-- Toast Notification Stack -->
+  <div id="toast-stack" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+  <!-- LOGIN SCREEN -->
+  <div id="login-screen" class="fixed inset-0 z-40 flex items-center justify-center p-4 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100">
+    <div class="glass-card w-full max-w-md p-8 rounded-2xl shadow-xl border border-amber-200/60 animate-fade-in">
+      <div class="text-center mb-8">
+        <div class="w-16 h-16 bg-gradient-to-tr from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-orange-500/20 text-white text-2xl">
+          <i class="fa-solid me-0 fa-building-user"></i>
+        </div>
+        <h1 class="text-2xl font-bold text-slate-900 site-name-text">Siddhivinayak Society</h1>
+        <p class="text-xs text-amber-700 font-medium mt-1">Smart Community Management Portal</p>
+      </div>
+
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Flat No. or User ID</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+              <i class="fa-solid fa-user text-sm"></i>
+            </span>
+            <input type="text" id="login-identifier" placeholder="e.g. A-402, A-101 or admin" required 
+              class="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500 transition-all">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Password</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+              <i class="fa-solid fa-lock text-sm"></i>
+            </span>
+            <input type="password" id="login-password" placeholder="Enter your password" required 
+              class="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500 transition-all">
+          </div>
+        </div>
+
+        <div id="login-error" class="hidden text-xs font-semibold text-red-600 bg-red-50 p-2.5 rounded-lg border border-red-200 flex items-center gap-2">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span>Invalid credentials. Try flat number (e.g. A-402) with password "sv2026", or admin login.</span>
+        </div>
+
+        <button type="submit" id="login-btn" 
+          class="w-full py-3 px-4 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold rounded-xl shadow-lg shadow-amber-600/20 active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-sm">
+          <span>Sign In to Dashboard</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+      </form>
+
+      <div class="mt-6 pt-4 border-t border-slate-200/60 text-center text-xs text-slate-500">
+        Demo logins: <span class="font-mono bg-slate-100 px-1.5 py-0.5 rounded">A-402</span> / <span class="font-mono bg-slate-100 px-1.5 py-0.5 rounded">sv2026</span> or <span class="font-mono bg-slate-100 px-1.5 py-0.5 rounded">admin</span> / <span class="font-mono bg-slate-100 px-1.5 py-0.5 rounded">admin2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN APP SHELL -->
+  <div id="app-shell" class="hidden flex-col min-h-screen">
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-amber-500/10 border border-amber-500/20 text-amber-600 rounded-xl flex items-center justify-center text-lg font-bold">
+            <i class="fa-solid fa-building"></i>
+          </div>
+          <div>
+            <h1 class="text-lg font-bold text-slate-900 site-name-text leading-tight">Siddhivinayak Society</h1>
+            <p class="text-[11px] text-amber-600 font-medium hidden sm:block">Resident Portal & Governance</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div class="hidden sm:flex flex-col text-right">
+            <span id="current-user-name" class="text-sm font-semibold text-slate-800">User</span>
+            <span id="current-user-role" class="text-[11px] font-medium text-amber-600">Resident</span>
+          </div>
+          <button id="logout-btn" 
+            class="px-3 py-1.5 border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="border-t border-slate-100 bg-white">
+        <nav id="main-nav" class="max-w-7xl mx-auto px-4 sm:px-6 flex gap-1 overflow-x-auto custom-scrollbar text-xs sm:text-sm font-semibold text-slate-600">
+          <button class="tab-btn active px-4 py-3 border-b-2 border-transparent transition-all flex items-center gap-2 whitespace-nowrap" data-tab="dashboard">
+            <i class="fa-solid fa-chart-line text-xs"></i> Dashboard
+          </button>
+          <button class="tab-btn px-4 py-3 border-b-2 border-transparent transition-all flex items-center gap-2 whitespace-nowrap" data-tab="payments">
+            <i class="fa-solid fa-indian-rupee-sign text-xs"></i> Payments
+          </button>
+          <button class="tab-btn px-4 py-3 border-b-2 border-transparent transition-all flex items-center gap-2 whitespace-nowrap" data-tab="complaints">
+            <i class="fa-solid fa-headset text-xs"></i> Complaints
+          </button>
+          <button class="tab-btn px-4 py-3 border-b-2 border-transparent transition-all flex items-center gap-2 whitespace-nowrap" data-tab="events">
+            <i class="fa-solid fa-calendar-days text-xs"></i> Events
+          </button>
+          <button class="tab-btn px-4 py-3 border-b-2 border-transparent transition-all flex items-center gap-2 whitespace-nowrap" data-tab="meetings">
+            <i class="fa-solid fa-users text-xs"></i> Meetings
+          </button>
+          <button class="tab-btn px-4 py-3 border-b-2 border-transparent transition-all flex items-center gap-2 whitespace-nowrap text-amber-700 hidden" data-tab="admin" id="admin-tab-btn">
+            <i class="fa-solid fa-sliders text-xs"></i> Admin Panel
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Content Panes -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+      <div id="tab-dashboard" class="tab-panel animate-fade-in"></div>
+      <div id="tab-payments" class="tab-panel hidden animate-fade-in"></div>
+      <div id="tab-complaints" class="tab-panel hidden animate-fade-in"></div>
+      <div id="tab-events" class="tab-panel hidden animate-fade-in"></div>
+      <div id="tab-meetings" class="tab-panel hidden animate-fade-in"></div>
+      <div id="tab-admin" class="tab-panel hidden animate-fade-in"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
+      <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+        <p>&copy; 2026 <span class="site-name-text">Siddhivinayak Society</span>. All rights reserved.</p>
+        <p class="text-slate-400">Powered by Society Cloud Platform</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- PAYMENT MODAL -->
+  <div id="payment-modal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-100 overflow-hidden animate-fade-in">
+      <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+        <h3 class="font-bold text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-credit-card text-amber-600"></i> Payment Gateway
+        </h3>
+        <button class="close-modal text-slate-400 hover:text-slate-600 p-1" data-close="payment-modal">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div id="payment-modal-body" class="p-6"></div>
+      <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-2">
+        <button class="close-modal px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100" data-close="payment-modal">Cancel</button>
+        <button id="confirm-payment-btn" class="px-5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-600/20">
+          Confirm Payment
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      // APP STATE
+      let state = {
+        currentUser: null,
+        societyName: "Siddhivinayak Society",
+        heroSubtitle: "Maintenance, complaints, events and meetings — tracked live.",
+        totalFlats: 120,
+        societyFunds: 480000,
+        monthlyDues: 3500,
+        paymentDueDate: "10th of every month",
+        paymentNotes: "Pay via UPI or Net Banking to avoid late fee charges.",
+        customBills: [
+          { id: "b1", title: "Monthly Maintenance Fee", amount: 3500, isVariable: false },
+          { id: "b2", title: "Ganpati Utsav Contribution", amount: 1000, isVariable: true },
+          { id: "b3", title: "Clubhouse Security Deposit", amount: 2000, isVariable: false }
+        ],
+        notices: [
+          { id: "n1", title: "Annual General Meeting (AGM) Notice", content: "The AGM will take place on Oct 5th at 10:00 AM in the Main Hall. Attendance is compulsory.", date: "2026-09-20", mediaUrl: "", mediaType: "" }
+        ],
+        residents: [
+          { id: "r1", name: "Taksheel", flat: "A-402", phone: "9876543210", role: "Resident", password: "sv2026", mediaUrl: "" },
+          { id: "r3", name: "Admin User", flat: "A-101", phone: "9876543212", role: "Admin", password: "admin2026", mediaUrl: "" }
+        ],
+        complaints: [
+          { id: "c1", title: "Lift B1 Maintenance Issue", flat: "B-101", status: "Open", date: "2026-09-24", category: "Elevator", mediaUrl: "", mediaType: "" }
+        ],
+        events: [
+          { id: "e1", title: "Ganesh Utsav Celebration", date: "2026-09-14", budget: "₹1,50,000", venue: "Main Clubhouse", status: "Upcoming", rsvpCount: 12, mediaUrl: "", mediaType: "" }
+        ],
+        meetings: [
+          { id: "m1", title: "AGM Meeting", date: "2026-10-05", time: "10:00 AM", location: "Community Hall", organizer: "Secretary" }
+        ],
+        noticeCollapsed: false
+      };
+
+      // UTILITIES
+      const formatRupees = (amount) => {
+        return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(amount);
+      };
+
+      function showToast(msg) {
+        const stack = document.getElementById("toast-stack");
+        if (!stack) return;
+        const toast = document.createElement("div");
+        toast.className = "pointer-events-auto bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-xl flex items-center justify-between gap-3 animate-fade-in border border-slate-700";
+        toast.innerHTML = `
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-circle-check text-emerald-400"></i>
+            <span>${msg}</span>
+          </div>
+          <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+        `;
+        stack.appendChild(toast);
+        setTimeout(() => toast.remove(), 3500);
+      }
+
+      function readFileAsBase64(file) {
+        return new Promise((resolve, reject) => {
+          if (!file) return resolve({ url: "", type: "" });
+          const reader = new FileReader();
+          reader.onload = () => {
+            const isVideo = file.type.startsWith("video");
+            resolve({ url: reader.result, type: isVideo ? "video" : "image" });
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function renderMediaHTML(url, type) {
+        if (!url) return '';
+        if (type === 'video') {
+          return `<video src="${url}" controls class="w-full max-h-52 rounded-xl mt-2 bg-black object-contain"></video>`;
+        }
+        return `<img src="${url}" class="w-full max-h-48 object-cover rounded-xl mt-2 border border-slate-200" alt="Attachment" />`;
+      }
+
+      // Storage Persistence
+      function saveStateLocally() {
+        try {
+          localStorage.setItem("society_portal_state", JSON.stringify(state));
+          showToast("Changes synced and saved!");
+        } catch (e) {
+          console.warn("Storage quota exceeded or restricted", e);
+        }
+      }
+
+      function loadStateFromLocal() {
+        try {
+          const stored = localStorage.getItem("society_portal_state");
+          if (stored) {
+            const savedState = JSON.parse(stored);
+            const currentUser = state.currentUser;
+            state = { ...savedState, currentUser };
+          }
+        } catch (e) {
+          console.warn("Unable to read local storage state", e);
+        }
+      }
+
+      function downloadNoticeForAndroid(title, content, date) {
+        const fileData = `========================================\n${state.societyName.toUpperCase()}\nOFFICIAL NOTICE\n========================================\n\nDate: ${date}\nTitle: ${title}\n\n${content}\n\n========================================\nIssued by Managing Committee`;
+        const blob = new Blob([fileData], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_notice.txt`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        showToast("Notice downloaded to device!");
+      }
+
+      function init() {
+        loadStateFromLocal();
+        setupEventListeners();
+        updateGlobalTextDisplays();
+      }
+
+      function setupEventListeners() {
+        document.getElementById("login-form")?.addEventListener("submit", (e) => {
+          e.preventDefault();
+          handleLogin();
+        });
+
+        document.getElementById("logout-btn")?.addEventListener("click", handleLogout);
+
+        document.querySelectorAll("#main-nav .tab-btn").forEach(tab => {
+          tab.addEventListener("click", () => switchTab(tab.dataset.tab));
+        });
+
+        document.querySelectorAll(".close-modal").forEach(btn => {
+          btn.addEventListener("click", (e) => {
+            const modalId = btn.getAttribute("data-close");
+            const modal = document.getElementById(modalId);
+            if (modal) modal.classList.add("hidden");
+          });
+        });
+      }
+
+      function updateGlobalTextDisplays() {
+        document.querySelectorAll(".site-name-text").forEach(el => el.textContent = state.societyName);
+      }
+
+      // AUTHENTICATION
+      function handleLogin() {
+        const identifierInput = document.getElementById("login-identifier");
+        const passwordInput = document.getElementById("login-password");
+        const errorEl = document.getElementById("login-error");
+
+        if (!identifierInput || !passwordInput) return;
+
+        const identifier = identifierInput.value.trim().toLowerCase();
+        const password = passwordInput.value.trim();
+
+        if (identifier === "admin" && password === "admin2026") {
+          state.currentUser = { name: "Admin User", role: "Admin", flat: "A-101" };
+        } else {
+          const foundResident = state.residents.find(r => 
+            r.flat.toLowerCase() === identifier || r.name.toLowerCase() === identifier
+          );
+
+          if (foundResident && (foundResident.password ? foundResident.password === password : password === "sv2026")) {
+            state.currentUser = {
+              name: foundResident.name,
+              role: foundResident.role,
+              flat: foundResident.flat
+            };
+          } else {
+            if (errorEl) errorEl.classList.remove("hidden");
+            return;
+          }
+        }
+
+        if (errorEl) errorEl.classList.add("hidden");
+        document.getElementById("login-screen")?.classList.add("hidden");
+        document.getElementById("app-shell")?.classList.remove("hidden");
+        document.getElementById("app-shell")?.classList.add("flex");
+
+        document.getElementById("current-user-name").textContent = state.currentUser.name;
+        document.getElementById("current-user-role").textContent = state.currentUser.role;
+
+        const adminTabBtn = document.getElementById("admin-tab-btn");
+        if (adminTabBtn) {
+          if (state.currentUser.role === "Admin") {
+            adminTabBtn.classList.remove("hidden");
+          } else {
+            adminTabBtn.classList.add("hidden");
+          }
+        }
+
+        switchTab("dashboard");
+      }
+
+      function handleLogout() {
+        state.currentUser = null;
+        document.getElementById("app-shell")?.classList.add("hidden");
+        document.getElementById("app-shell")?.classList.remove("flex");
+        document.getElementById("login-screen")?.classList.remove("hidden");
+      }
+
+      function switchTab(tabId) {
+        document.querySelectorAll("#main-nav .tab-btn").forEach(btn => {
+          if (btn.dataset.tab === tabId) {
+            btn.classList.add("active");
+          } else {
+            btn.classList.remove("active");
+          }
+        });
+
+        document.querySelectorAll(".tab-panel").forEach(panel => {
+          if (panel.id === `tab-${tabId}`) {
+            panel.classList.remove("hidden");
+          } else {
+            panel.classList.add("hidden");
+          }
+        });
+
+        if (tabId === "dashboard") renderDashboard();
+        if (tabId === "payments") renderPayments();
+        if (tabId === "complaints") renderComplaints();
+        if (tabId === "events") renderEvents();
+        if (tabId === "meetings") renderMeetings();
+        if (tabId === "admin") renderAdmin();
+      }
+
+      function renderDashboard() {
+        const panel = document.getElementById("tab-dashboard");
+        if (!panel) return;
+        const isAdmin = state.currentUser?.role === "Admin";
+        const isCollapsed = state.noticeCollapsed;
+
+        panel.innerHTML = `
+          <div class="flex flex-col lg:flex-row gap-6 items-start">
+            <!-- Sidebar Notice Board -->
+            <div class="${isCollapsed ? 'w-full lg:w-16' : 'w-full lg:w-80'} transition-all duration-300 bg-white border border-slate-200 rounded-2xl p-4 shadow-xs shrink-0">
+              <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+                ${!isCollapsed ? '<h3 class="font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-bullhorn text-amber-600"></i> Notice Board</h3>' : ''}
+                <button id="btn-toggle-notice" class="p-1.5 text-xs text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-all mx-auto">
+                  ${isCollapsed ? '<i class="fa-solid fa-angles-right text-amber-600 text-lg"></i>' : '<i class="fa-solid fa-angles-left"></i> Collapse'}
+                </button>
+              </div>
+
+              ${!isCollapsed ? `
+                ${isAdmin ? `
+                  <div class="mb-4 bg-amber-50/60 p-3.5 rounded-xl border border-amber-200/80">
+                    <h4 class="text-xs font-bold text-amber-800 uppercase tracking-wide mb-2 flex items-center gap-1.5">
+                      <i class="fa-solid fa-plus-circle"></i> Publish Announcement
+                    </h4>
+                    <form id="form-add-notice" class="space-y-2">
+                      <input type="text" id="notice-title" placeholder="Notice Title" required class="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                      <textarea id="notice-content" placeholder="Notice details..." required rows="2" class="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
+                      <label class="block text-[11px] font-semibold text-slate-600">Attach Media File:</label>
+                      <input type="file" id="notice-file" accept="image/*,video/*" class="text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-[11px] file:font-semibold file:bg-amber-100 file:text-amber-800 hover:file:bg-amber-200">
+                      <button type="submit" class="w-full py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-lg transition-all shadow-xs">Publish</button>
+                    </form>
+                  </div>
+                ` : ''}
+
+                <div class="space-y-3 max-h-[550px] overflow-y-auto custom-scrollbar pr-1">
+                  ${state.notices.length === 0 ? '<p class="text-xs text-slate-400 text-center py-4">No notices published yet.</p>' : ''}
+                  ${state.notices.map(n => `
+                    <div class="p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/50 hover:bg-slate-50 transition-all border-l-4 border-l-amber-500">
+                      <div class="text-[11px] font-medium text-slate-400 flex items-center gap-1">
+                        <i class="fa-regular fa-calendar-clock"></i> ${n.date}
+                      </div>
+                      <h4 class="font-bold text-slate-800 text-sm mt-0.5">${n.title}</h4>
+                      <p class="text-xs text-slate-600 mt-1 leading-relaxed">${n.content}</p>
+                      
+                      ${renderMediaHTML(n.mediaUrl, n.mediaType)}
+
+                      <div class="flex items-center gap-2 mt-3 pt-2 border-t border-slate-200/50 flex-wrap">
+                        <button class="btn-download-notice px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-semibold rounded-lg transition-all flex items-center gap-1 shadow-xs" data-title="${n.title}" data-content="${n.content}" data-date="${n.date}">
+                          <i class="fa-solid fa-download text-[10px]"></i> Download
+                        </button>
+                        ${isAdmin ? `
+                          <button class="btn-delete-notice px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 text-[11px] font-semibold rounded-lg transition-all" data-id="${n.id}">
+                            <i class="fa-solid fa-trash-can"></i>
+                          </button>
+                        ` : ''}
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : `
+                <div class="flex flex-col items-center gap-4 py-4 text-amber-600">
+                  <i class="fa-solid fa-bullhorn text-xl"></i>
+                  <span class="text-[10px] font-bold rotate-90 whitespace-nowrap tracking-widest uppercase">Notices</span>
+                </div>
+              `}
+            </div>
+
+            <!-- Main Dashboard Body -->
+            <div class="flex-1 space-y-6 w-full">
+              <!-- Hero Banner -->
+              <div class="hero-gradient p-6 sm:p-8 rounded-2xl border border-amber-200/80 shadow-xs relative overflow-hidden">
+                <div class="relative z-10 max-w-xl">
+                  <span class="px-2.5 py-1 bg-amber-500/10 text-amber-800 font-bold text-[11px] rounded-full border border-amber-500/20 uppercase tracking-wider">Community Hub</span>
+                  <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 site-name-text">${state.societyName}</h2>
+                  <p class="text-slate-600 text-sm mt-1 leading-relaxed">${state.heroSubtitle}</p>
+                </div>
+                <div class="absolute -right-8 -bottom-8 opacity-10 text-slate-900 pointer-events-none">
+                  <i class="fa-solid fa-city text-9xl"></i>
+                </div>
+              </div>
+
+              <!-- Metric Cards Grid -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-4">
+                  <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 text-xl font-bold">
+                    <i class="fa-solid fa-building text-amber-600"></i>
+                  </div>
+                  <div>
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Total Units</span>
+                    <span class="text-xl font-extrabold text-slate-800">${state.totalFlats} Apartments</span>
+                  </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-4">
+                  <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 text-xl font-bold">
+                    <i class="fa-solid fa-vault"></i>
+                  </div>
+                  <div>
+                    <span class="text-xs font-semibold text-emerald-600 uppercase tracking-wider block">Reserve Funds</span>
+                    <span class="text-xl font-extrabold text-emerald-700">${formatRupees(state.societyFunds)}</span>
+                  </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-4">
+                  <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center text-orange-600 text-xl font-bold">
+                    <i class="fa-solid fa-receipt"></i>
+                  </div>
+                  <div>
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Monthly Dues</span>
+                    <span class="text-xl font-extrabold text-slate-800">${formatRupees(state.monthlyDues)}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Action Shortcuts -->
+              <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+                <h3 class="font-bold text-slate-800 mb-4 text-sm uppercase tracking-wide text-slate-500">Quick Operations</h3>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <button onclick="switchTab('payments')" class="p-4 rounded-xl border border-slate-100 bg-slate-50 hover:bg-amber-50/50 hover:border-amber-200 transition-all text-left group">
+                    <i class="fa-solid fa-wallet text-amber-600 text-lg mb-2 group-hover:scale-110 transition-transform block"></i>
+                    <span class="font-bold text-slate-800 text-xs block">Pay Maintenance</span>
+                    <span class="text-[10px] text-slate-400">Clear dues online</span>
+                  </button>
+                  <button onclick="switchTab('complaints')" class="p-4 rounded-xl border border-slate-100 bg-slate-50 hover:bg-amber-50/50 hover:border-amber-200 transition-all text-left group">
+                    <i class="fa-solid fa-wrench text-amber-600 text-lg mb-2 group-hover:scale-110 transition-transform block"></i>
+                    <span class="font-bold text-slate-800 text-xs block">Log Ticket</span>
+                    <span class="text-[10px] text-slate-400">Report repairs</span>
+                  </button>
+                  <button onclick="switchTab('events')" class="p-4 rounded-xl border border-slate-100 bg-slate-50 hover:bg-amber-50/50 hover:border-amber-200 transition-all text-left group">
+                    <i class="fa-solid fa-champagne-glasses text-amber-600 text-lg mb-2 group-hover:scale-110 transition-transform block"></i>
+                    <span class="font-bold text-slate-800 text-xs block">Society Events</span>
+                    <span class="text-[10px] text-slate-400">RSVP & details</span>
+                  </button>
+                  <button onclick="switchTab('meetings')" class="p-4 rounded-xl border border-slate-100 bg-slate-50 hover:bg-amber-50/50 hover:border-amber-200 transition-all text-left group">
+                    <i class="fa-solid fa-handshake text-amber-600 text-lg mb-2 group-hover:scale-110 transition-transform block"></i>
+                    <span class="font-bold text-slate-800 text-xs block">Agendas</span>
+                    <span class="text-[10px] text-slate-400">AGMs & Minutes</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        document.getElementById("btn-toggle-notice")?.addEventListener("click", () => {
+          state.noticeCollapsed = !state.noticeCollapsed;
+          renderDashboard();
+        });
+
+        document.getElementById("form-add-notice")?.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const fileInput = document.getElementById("notice-file");
+          const media = await readFileAsBase64(fileInput?.files[0]);
+
+          state.notices.unshift({
+            id: "n" + Date.now(),
+            title: document.getElementById("notice-title").value,
+            content: document.getElementById("notice-content").value,
+            date: new Date().toISOString().split("T")[0],
+            mediaUrl: media.url,
+            mediaType: media.type
+          });
+          saveStateLocally();
+          renderDashboard();
+        });
+
+        document.querySelectorAll(".btn-download-notice").forEach(btn => {
+          btn.addEventListener("click", (e) => {
+            const target = e.currentTarget;
+            const { title, content, date } = target.dataset;
+            downloadNoticeForAndroid(title, content, date);
+          });
+        });
+
+        document.querySelectorAll(".btn-delete-notice").forEach(btn => {
+          btn.addEventListener("click", (e) => {
+            const id = e.currentTarget.dataset.id;
+            state.notices = state.notices.filter(n => n.id !== id);
+            saveStateLocally();
+            renderDashboard();
+          });
+        });
+      }
+
+      function renderPayments() {
+        const panel = document.getElementById("tab-payments");
+        if (!panel) return;
+        const isAdmin = state.currentUser?.role === "Admin";
+
+        panel.innerHTML = `
+          <div class="max-w-4xl mx-auto space-y-6">
+            ${isAdmin ? `
+              <div class="bg-amber-50/80 border border-amber-200/80 rounded-2xl p-6 shadow-xs space-y-4">
+                <div class="flex items-center gap-2 text-amber-800 font-bold text-sm uppercase tracking-wide">
+                  <i class="fa-solid fa-sliders"></i> Master Financial Settings & Contribution Builder
+                </div>
+
+                <form id="form-update-payment-config" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Monthly Maintenance Base Fee (₹)</label>
+                    <input type="number" id="cfg-monthly-dues" value="${state.monthlyDues}" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Due Date Schedule</label>
+                    <input type="text" id="cfg-due-date" value="${state.paymentDueDate}" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                  </div>
+                  <div class="sm:col-span-2">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Payment Instructions / Notes</label>
+                    <input type="text" id="cfg-notes" value="${state.paymentNotes}" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                  </div>
+                  <button type="submit" class="sm:col-span-2 w-fit px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl transition-all shadow-xs">
+                    Update Base Rates
+                  </button>
+                </form>
+
+                <hr class="border-amber-200/60 my-2">
+
+                <h4 class="text-xs font-bold text-amber-900 uppercase tracking-wide">Add Custom Payment / Event Collection Category</h4>
+                <form id="form-add-bill-category" class="flex flex-wrap items-end gap-3">
+                  <div class="flex-2 min-w-[180px]">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Category Title</label>
+                    <input type="text" id="new-bill-title" placeholder="e.g. Ganpati Celebration" required class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                  </div>
+                  <div class="flex-1 min-w-[120px]">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Default Amount (₹)</label>
+                    <input type="number" id="new-bill-amount" placeholder="1000" required class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                  </div>
+                  <div class="flex items-center gap-2 py-2">
+                    <input type="checkbox" id="new-bill-variable" class="rounded text-amber-600 focus:ring-amber-500">
+                    <label for="new-bill-variable" class="text-xs font-semibold text-slate-700">Allow Custom Variable Amount</label>
+                  </div>
+                  <button type="submit" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition-all shadow-xs">
+                    Add Category
+                  </button>
+                </form>
+              </div>
+            ` : ''}
+
+            <!-- Active Maintenance Card -->
+            <div class="bg-gradient-to-r from-amber-500 to-orange-600 text-white p-6 rounded-2xl shadow-lg shadow-amber-500/15 relative overflow-hidden">
+              <span class="px-2.5 py-1 bg-white/20 text-white font-bold text-[10px] rounded-full uppercase tracking-wider">Active Billing Cycle</span>
+              <h2 class="text-3xl font-extrabold mt-2">Maintenance: ${formatRupees(state.monthlyDues)}</h2>
+              <p class="text-amber-100 text-xs mt-1">Due Date: <strong class="text-white">${state.paymentDueDate}</strong></p>
+              <div class="mt-4 pt-3 border-t border-white/20 text-xs text-amber-100 flex items-center gap-2">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>${state.paymentNotes}</span>
+              </div>
+            </div>
+
+            <!-- List of Payable Items -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
+              <h3 class="font-bold text-slate-800 text-base">Payable Bills & Society Contributions</h3>
+              <div class="space-y-3">
+                ${state.customBills.map(b => `
+                  <div class="p-4 rounded-xl border border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-slate-200 transition-all">
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <strong class="text-slate-800 text-sm">${b.title}</strong>
+                        ${b.isVariable ? '<span class="text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full">Variable Contribution</span>' : ''}
+                      </div>
+                      <div class="text-amber-700 font-bold text-sm mt-0.5">
+                        Default: ${formatRupees(b.amount)}
+                      </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                      ${b.isVariable ? `
+                        <div class="flex items-center gap-1 bg-white border border-slate-200 rounded-xl px-2.5 py-1">
+                          <span class="text-slate-400 font-bold text-xs">₹</span>
+                          <input type="number" id="input-amt-${b.id}" value="${b.amount}" placeholder="Amount" class="w-20 text-xs font-bold text-slate-800 focus:outline-none">
+                        </div>
+                      ` : ''}
+
+                      <button class="btn-pay-item px-4 py-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-bold text-xs rounded-xl shadow-xs transition-all" 
+                        data-id="${b.id}" data-title="${b.title}" data-isvariable="${b.isVariable ? 'true' : 'false'}" data-amount="${b.amount}">
+                        Pay Now
+                      </button>
+                      ${isAdmin ? `
+                        <button class="btn-delete-bill p-2 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl text-xs transition-all" data-id="${b.id}">
+                          <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                      ` : ''}
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+
+        if (isAdmin) {
+          document.getElementById("form-update-payment-config")?.addEventListener("submit", (e) => {
+            e.preventDefault();
+            state.monthlyDues = parseFloat(document.getElementById("cfg-monthly-dues").value) || 0;
+            state.paymentDueDate = document.getElementById("cfg-due-date").value;
+            state.paymentNotes = document.getElementById("cfg-notes").value;
+            saveStateLocally();
+            renderPayments();
+          });
+
+          document.getElementById("form-add-bill-category")?.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const title = document.getElementById("new-bill-title").value;
+            const amount = parseFloat(document.getElementById("new-bill-amount").value) || 0;
+            const isVariable = document.getElementById("new-bill-variable").checked;
+
+            state.customBills.push({
+              id: "b" + Date.now(),
+              title,
+              amount,
+              isVariable
+            });
+
+            saveStateLocally();
+            renderPayments();
+          });
+
+          document.querySelectorAll(".btn-delete-bill").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+              const id = e.currentTarget.dataset.id;
+              state.customBills = state.customBills.filter(b => b.id !== id);
+              saveStateLocally();
+              renderPayments();
+            });
+          });
+        }
+
+        document.querySelectorAll(".btn-pay-item").forEach(btn => {
+          btn.addEventListener("click", (e) => {
+            const target = e.currentTarget;
+            const id = target.dataset.id;
+            const title = target.dataset.title;
+            const isVariable = target.dataset.isvariable === "true";
+            let finalAmount = parseFloat(target.dataset.amount) || 0;
+
+            if (isVariable) {
+              const inputEl = document.getElementById(`input-amt-${id}`);
+              if (inputEl && inputEl.value) {
+                finalAmount = parseFloat(inputEl.value) || 0;
+              }
+            }
+
+            if (finalAmount <= 0) {
+              showToast("Please enter a valid amount greater than ₹0.");
+              return;
+            }
+
+            const modal = document.getElementById("payment-modal");
+            const body = document.getElementById("payment-modal-body");
+            if (modal && body) {
+              body.innerHTML = `
+                <div class="space-y-3">
+                  <div class="text-xs text-slate-500">Initiating digital transaction for:</div>
+                  <div class="font-bold text-slate-800 text-base">${title}</div>
+                  <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-center">
+                    <span class="text-xs text-amber-800 font-medium block">Total Payable Amount</span>
+                    <span class="text-2xl font-extrabold text-amber-700">${formatRupees(finalAmount)}</span>
+                  </div>
+                  <div class="text-[11px] text-slate-400 text-center">This simulated payment updates the society reserve fund instantly.</div>
+                </div>
+              `;
+              modal.classList.remove("hidden");
+              
+              document.getElementById("confirm-payment-btn").onclick = () => {
+                state.societyFunds += finalAmount;
+                modal.classList.add("hidden");
+                showToast(`Payment of ${formatRupees(finalAmount)} successful!`);
+                saveStateLocally();
+                renderPayments();
+              };
+            }
+          });
+        });
+      }
+
+      function renderComplaints() {
+        const panel = document.getElementById("tab-complaints");
+        if (!panel) return;
+        const isAdmin = state.currentUser?.role === "Admin";
+
+        panel.innerHTML = `
+          <div class="max-w-4xl mx-auto space-y-6">
+            <div class="flex justify-between items-center flex-wrap gap-4">
+              <div>
+                <h2 class="text-xl font-bold text-slate-900">Complaints & Service Tickets</h2>
+                <p class="text-xs text-slate-500">Track and report society maintenance concerns</p>
+              </div>
+              <button id="btn-raise-complaint" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-1.5">
+                <i class="fa-solid fa-plus"></i> Raise New Ticket
+              </button>
+            </div>
+
+            <div id="new-complaint-form-container" class="hidden bg-amber-50/80 border border-amber-200/80 p-5 rounded-2xl shadow-xs">
+              <h3 class="font-bold text-amber-900 text-sm mb-3">Log a New Issue Ticket</h3>
+              <form id="form-create-complaint" class="space-y-3">
+                <input type="text" id="complaint-title" placeholder="Brief issue description (e.g., Water leakage in B-wing)" required class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                <select id="complaint-category" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                  <option value="Plumbing">Plumbing</option>
+                  <option value="Elevator">Elevator</option>
+                  <option value="Electrical">Electrical</option>
+                  <option value="Security">Security</option>
+                  <option value="General Maintenance">General Maintenance</option>
+                </select>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Attach Photo or Video Proof:</label>
+                  <input type="file" id="complaint-file" accept="image/*,video/*" class="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-amber-100 file:text-amber-800 hover:file:bg-amber-200">
+                </div>
+                <button type="submit" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition-all">Submit Ticket</button>
+              </form>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              ${state.complaints.map(c => `
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between space-y-4">
+                  <div>
+                    <div class="flex justify-between items-center mb-2">
+                      <span class="text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md">${c.category}</span>
+                      <span class="text-xs font-bold px-2 py-0.5 rounded-full ${c.status === 'Resolved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                        ${c.status}
+                      </span>
+                    </div>
+                    <h3 class="font-bold text-slate-800 text-sm">${c.title}</h3>
+                    <div class="text-xs text-slate-400 mt-1 flex items-center justify-between">
+                      <span>Flat: <strong class="text-slate-600">${c.flat}</strong></span>
+                      <span>${c.date}</span>
+                    </div>
+
+                    ${renderMediaHTML(c.mediaUrl, c.mediaType)}
+                  </div>
+
+                  <div class="pt-3 border-t border-slate-100 flex items-center gap-2">
+                    ${c.status !== 'Resolved' ? `
+                      <button class="btn-resolve-complaint flex-1 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs rounded-xl transition-all" data-id="${c.id}">
+                        Mark Resolved
+                      </button>
+                    ` : ''}
+                    ${isAdmin ? `
+                      <button class="btn-delete-complaint px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-xs rounded-xl transition-all" data-id="${c.id}">
+                        Delete
+                      </button>
+                    ` : ''}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+
+        document.getElementById("btn-raise-complaint")?.addEventListener("click", () => {
+          const form = document.getElementById("new-complaint-form-container");
+          form.classList.toggle("hidden");
+        });
+
+        document.getElementById("form-create-complaint")?.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const fileInput = document.getElementById("complaint-file");
+          const media = await readFileAsBase64(fileInput?.files[0]);
+
+          state.complaints.unshift({
+            id: "c" + Date.now(),
+            title: document.getElementById("complaint-title").value,
+            category: document.getElementById("complaint-category").value,
+            flat: state.currentUser ? state.currentUser.flat : "A-402",
+            status: "Open",
+            date: new Date().toISOString().split("T")[0],
+            mediaUrl: media.url,
+            mediaType: media.type
+          });
+          saveStateLocally();
+          renderComplaints();
+        });
+
+        document.querySelectorAll(".btn-resolve-complaint").forEach(btn => {
+          btn.addEventListener("click", (e) => {
+            const item = state.complaints.find(c => c.id === e.currentTarget.dataset.id);
+            if (item) item.status = "Resolved";
+            saveStateLocally();
+            renderComplaints();
+          });
+        });
+
+        document.querySelectorAll(".btn-delete-complaint").forEach(btn => {
+          btn.addEventListener("click", (e) => {
+            state.complaints = state.complaints.filter(c => c.id !== e.currentTarget.dataset.id);
+            saveStateLocally();
+            renderComplaints();
+          });
+        });
+      }
+
+      function renderEvents() {
+        const panel = document.getElementById("tab-events");
+        if (!panel) return;
+        const isAdmin = state.currentUser?.role === "Admin";
+
+        panel.innerHTML = `
+          <div class="max-w-4xl mx-auto space-y-6">
+            <div class="flex justify-between items-center">
+              <div>
+                <h2 class="text-xl font-bold text-slate-900">Society Events & Functions</h2>
+                <p class="text-xs text-slate-500">Upcoming festivals, gatherings & celebrations</p>
+              </div>
+              ${isAdmin ? `
+                <button id="btn-add-event-toggle" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl transition-all">
+                  ➕ Add Event
+                </button>
+              ` : ''}
+            </div>
+
+            ${isAdmin ? `
+              <div id="add-event-form-container" class="hidden bg-amber-50/80 border border-amber-200/80 p-5 rounded-2xl shadow-xs">
+                <h3 class="font-bold text-amber-900 text-sm mb-3">Create New Society Event</h3>
+                <form id="form-create-event" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <input type="text" id="event-title" placeholder="Event Name" required class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
+                  <input type="text" id="event-date" placeholder="Date (e.g. 2026-11-15)" required class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
+                  <input type="text" id="event-venue" placeholder="Venue" required class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
+                  <input type="text" id="event-budget" placeholder="Budget" required class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
+                  <div class="sm:col-span-2">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Event Promo Photo / Video:</label>
+                    <input type="file" id="event-file" accept="image/*,video/*" class="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-amber-100 file:text-amber-800">
+                  </div>
+                  <button type="submit" class="sm:col-span-2 w-fit px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl">Save Event</button>
+                </form>
+              </div>
+            ` : ''}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              ${state.events.map(e => `
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
+                  <div>
+                    <h3 class="font-bold text-slate-800 text-base">${e.title}</h3>
+                    <div class="text-xs text-slate-500 mt-2 space-y-1">
+                      <div><i class="fa-regular fa-calendar text-amber-600 mr-1.5"></i> ${e.date}</div>
+                      <div><i class="fa-solid fa-location-dot text-amber-600 mr-1.5"></i> ${e.venue}</div>
+                      <div><i class="fa-solid fa-coins text-amber-600 mr-1.5"></i> Budget: ${e.budget}</div>
+                    </div>
+
+                    ${renderMediaHTML(e.mediaUrl, e.mediaType)}
+                  </div>
+
+                  <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                    <button class="btn-rsvp px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-xl transition-all shadow-xs flex items-center gap-1.5" data-id="${e.id}">
+                      <i class="fa-solid fa-circle-check"></i> RSVP Attending (${e.rsvpCount || 0})
+                    </button>
+                    ${isAdmin ? `
+                      <button class="btn-delete-event p-2 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl text-xs" data-id="${e.id}">
+                        <i class="fa-solid fa-trash-can"></i>
+                      </button>
+                    ` : ''}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+
+        if (isAdmin) {
+          document.getElementById("btn-add-event-toggle")?.addEventListener("click", () => {
+            const c = document.getElementById("add-event-form-container");
+            c.classList.toggle("hidden");
+          });
+
+          document.getElementById("form-create-event")?.addEventListener("submit", async (ev) => {
+            ev.preventDefault();
+            const fileInput = document.getElementById("event-file");
+            const media = await readFileAsBase64(fileInput?.files[0]);
+
+            state.events.push({
+              id: "e" + Date.now(),
+              title: document.getElementById("event-title").value,
+              date: document.getElementById("event-date").value,
+              venue: document.getElementById("event-venue").value,
+              budget: document.getElementById("event-budget").value,
+              status: "Upcoming",
+              rsvpCount: 1,
+              mediaUrl: media.url,
+              mediaType: media.type
+            });
+            saveStateLocally();
+            renderEvents();
+          });
+
+          document.querySelectorAll(".btn-delete-event").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+              state.events = state.events.filter(ev => ev.id !== e.currentTarget.dataset.id);
+              saveStateLocally();
+              renderEvents();
+            });
+          });
+        }
+
+        document.querySelectorAll(".btn-rsvp").forEach(btn => {
+          btn.addEventListener("click", (e) => {
+            const ev = state.events.find(item => item.id === e.currentTarget.dataset.id);
+            if (ev) {
+              ev.rsvpCount = (ev.rsvpCount || 0) + 1;
+              showToast("RSVP confirmed for event!");
+              saveStateLocally();
+              renderEvents();
+            }
+          });
+        });
+      }
+
+      function renderMeetings() {
+        const panel = document.getElementById("tab-meetings");
+        if (!panel) return;
+        const isAdmin = state.currentUser?.role === "Admin";
+
+        panel.innerHTML = `
+          <div class="max-w-4xl mx-auto space-y-6">
+            <div class="flex justify-between items-center">
+              <div>
+                <h2 class="text-xl font-bold text-slate-900">Committee & AGM Meetings</h2>
+                <p class="text-xs text-slate-500">Official discussions & scheduled gatherings</p>
+              </div>
+              ${isAdmin ? `
+                <button id="btn-add-meeting-toggle" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl transition-all">
+                  ➕ Schedule Meeting
+                </button>
+              ` : ''}
+            </div>
+
+            ${isAdmin ? `
+              <div id="add-meeting-form-container" class="hidden bg-amber-50/80 border border-amber-200/80 p-5 rounded-2xl shadow-xs">
+                <h3 class="font-bold text-amber-900 text-sm mb-3">Schedule Meeting</h3>
+                <form id="form-create-meeting" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <input type="text" id="meeting-title" placeholder="Title" required class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
+                  <input type="text" id="meeting-date" placeholder="Date" required class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
+                  <input type="text" id="meeting-time" placeholder="Time" required class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
+                  <input type="text" id="meeting-location" placeholder="Location" required class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
+                  <button type="submit" class="sm:col-span-2 w-fit px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl">Save Meeting</button>
+                </form>
+              </div>
+            ` : ''}
+
+            <div class="space-y-3">
+              ${state.meetings.map(m => `
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex justify-between items-center">
+                  <div>
+                    <h3 class="font-bold text-slate-800 text-base">${m.title}</h3>
+                    <div class="text-xs text-slate-500 mt-1 flex items-center gap-3 flex-wrap">
+                      <span><i class="fa-regular fa-calendar text-amber-600 mr-1"></i> ${m.date} at ${m.time}</span>
+                      <span><i class="fa-solid fa-location-dot text-amber-600 mr-1"></i> ${m.location}</span>
+                    </div>
+                  </div>
+                  ${isAdmin ? `
+                    <button class="btn-delete-meeting p-2 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl text-xs" data-id="${m.id}">
+                      <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                  ` : ''}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+
+        if (isAdmin) {
+          document.getElementById("btn-add-meeting-toggle")?.addEventListener("click", () => {
+            const c = document.getElementById("add-meeting-form-container");
+            c.classList.toggle("hidden");
+          });
+
+          document.getElementById("form-create-meeting")?.addEventListener("submit", (e) => {
+            e.preventDefault();
+            state.meetings.push({
+              id: "m" + Date.now(),
+              title: document.getElementById("meeting-title").value,
+              date: document.getElementById("meeting-date").value,
+              time: document.getElementById("meeting-time").value,
+              location: document.getElementById("meeting-location").value,
+              organizer: "Secretary"
+            });
+            saveStateLocally();
+            renderMeetings();
+          });
+
+          document.querySelectorAll(".btn-delete-meeting").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+              state.meetings = state.meetings.filter(m => m.id !== e.currentTarget.dataset.id);
+              saveStateLocally();
+              renderMeetings();
+            });
+          });
+        }
+      }
+
+      function renderAdmin() {
+        const adminPanel = document.getElementById("tab-admin");
+        if (!adminPanel) return;
+
+        adminPanel.innerHTML = `
+          <div class="max-w-4xl mx-auto space-y-6">
+            <div class="bg-gradient-to-r from-amber-600 to-orange-600 text-white p-6 rounded-2xl shadow-lg shadow-amber-600/15">
+              <h2 class="text-xl font-bold flex items-center gap-2">
+                <i class="fa-solid fa-sliders"></i> Master Admin Control Panel
+              </h2>
+              <p class="text-xs text-amber-100 mt-1">Manage portal parameters, branding, and resident directory credentials</p>
+            </div>
+
+            <!-- Site Branding Settings -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+              <h3 class="font-bold text-slate-800 text-base">🏷️ Portal Branding Settings</h3>
+              <form id="edit-branding-form" class="space-y-3">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Society / Portal Name:</label>
+                  <input type="text" id="input-society-name" value="${state.societyName}" required class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Hero Subtitle / Tagline:</label>
+                  <textarea id="input-hero-subtitle" rows="2" required class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-amber-500 focus:outline-none">${state.heroSubtitle}</textarea>
+                </div>
+                <button type="submit" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl shadow-xs transition-all">Save Branding</button>
+              </form>
+            </div>
+
+            <!-- Resident Management -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+              <div class="flex justify-between items-center">
+                <h3 class="font-bold text-slate-800 text-base">👥 Resident Directory & Passwords</h3>
+                <button id="btn-toggle-add-resident" class="px-3 py-1.5 bg-amber-50 text-amber-800 hover:bg-amber-100 font-bold text-xs rounded-xl transition-all">
+                  ➕ Add Resident
+                </button>
+              </div>
+
+              <div id="add-resident-form-container" class="hidden bg-amber-50/80 border border-amber-200/80 p-4 rounded-2xl">
+                <h4 class="font-bold text-amber-900 text-xs uppercase mb-3">Add Resident & Assign Credentials</h4>
+                <form id="form-add-resident" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <input type="text" id="res-name" placeholder="Full Name" required class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
+                  <input type="text" id="res-flat" placeholder="Flat No (e.g. B-204)" required class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
+                  <input type="text" id="res-phone" placeholder="Phone Number" required class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
+                  <input type="password" id="res-password" placeholder="Set Password" required class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
+                  <select id="res-role" class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
+                    <option value="Resident">Resident</option>
+                    <option value="Admin">Admin</option>
+                  </select>
+                  <div class="sm:col-span-2">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Resident Profile Photo:</label>
+                    <input type="file" id="res-file" accept="image/*" class="text-xs text-slate-500">
+                  </div>
+                  <button type="submit" class="sm:col-span-2 w-fit px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl">Save Member</button>
+                </form>
+              </div>
+
+              <div class="overflow-x-auto custom-scrollbar">
+                <table class="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold">
+                      <th class="p-3">Photo</th>
+                      <th class="p-3">Name</th>
+                      <th class="p-3">Flat</th>
+                      <th class="p-3">Phone</th>
+                      <th class="p-3">Password</th>
+                      <th class="p-3">Role</th>
+                      <th class="p-3 text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    ${state.residents.map(r => `
+                      <tr class="hover:bg-slate-50/50">
+                        <td class="p-3">
+                          ${r.mediaUrl ? `<img src="${r.mediaUrl}" class="w-8 h-8 rounded-full object-cover">` : '<div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500"><i class="fa-solid fa-user text-xs"></i></div>'}
+                        </td>
+                        <td class="p-3 font-bold text-slate-800">${r.name}</td>
+                        <td class="p-3">${r.flat}</td>
+                        <td class="p-3">${r.phone}</td>
+                        <td class="p-3 font-mono text-slate-600">${r.password || 'sv2026'}</td>
+                        <td class="p-3">
+                          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${r.role === 'Admin' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'}">
+                            ${r.role}
+                          </span>
+                        </td>
+                        <td class="p-3 text-right">
+                          <button class="btn-delete-resident px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg font-bold" data-id="${r.id}">
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        `;
+
+        document.getElementById("edit-branding-form")?.addEventListener("submit", (e) => {
+          e.preventDefault();
+          state.societyName = document.getElementById("input-society-name").value;
+          state.heroSubtitle = document.getElementById("input-hero-subtitle").value;
+          updateGlobalTextDisplays();
+          saveStateLocally();
+          renderAdmin();
+        });
+
+        document.getElementById("btn-toggle-add-resident")?.addEventListener("click", () => {
+          const container = document.getElementById("add-resident-form-container");
+          if (container) container.classList.toggle("hidden");
+        });
+
+        document.getElementById("form-add-resident")?.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const fileInput = document.getElementById("res-file");
+          const media = await readFileAsBase64(fileInput?.files[0]);
+
+          state.residents.push({
+            id: "r" + Date.now(),
+            name: document.getElementById("res-name").value,
+            flat: document.getElementById("res-flat").value,
+            phone: document.getElementById("res-phone").value,
+            password: document.getElementById("res-password").value,
+            role: document.getElementById("res-role").value,
+            mediaUrl: media.url,
+            mediaType: media.type
+          });
+
+          saveStateLocally();
+          renderAdmin();
+        });
+
+        document.querySelectorAll(".btn-delete-resident").forEach(btn => {
+          btn.addEventListener("click", (e) => {
+            state.residents = state.residents.filter(r => r.id !== e.currentTarget.dataset.id);
+            saveStateLocally();
+            renderAdmin();
+          });
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", init);
+    })();
+  </script>
+</body>
+</html>
